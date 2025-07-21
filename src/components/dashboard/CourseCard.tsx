@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Clock, Users, Star, Play } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface CourseCardProps {
   title: string;
@@ -18,6 +19,7 @@ interface CourseCardProps {
   style?: React.CSSProperties;
   nextLesson?: string;
   isRecommended?: boolean;
+  videoUrl?: string;
 }
 
 export const CourseCard = ({ 
@@ -33,7 +35,8 @@ export const CourseCard = ({
   className,
   style,
   nextLesson,
-  isRecommended 
+  isRecommended,
+  videoUrl
 }: CourseCardProps) => {
   const getLevelColor = (level: string) => {
     switch (level) {
@@ -47,6 +50,8 @@ export const CourseCard = ({
         return "bg-muted text-muted-foreground";
     }
   };
+
+  const navigate = useNavigate();
 
   return (
     <Card className={`group overflow-hidden transition-all duration-300 hover:shadow-medium hover:-translate-y-1 ${className || ""}`} style={style}>
@@ -133,7 +138,11 @@ export const CourseCard = ({
       </CardContent>
       
       <CardFooter className="p-4 pt-0">
-        <Button className="w-full" variant={progress > 0 ? "default" : "gradient"}>
+        <Button 
+          className="w-full" 
+          variant={progress > 0 ? "default" : "gradient"}
+          onClick={() => navigate(`/courses/${encodeURIComponent(title)}`, { state: { videoUrl } })}
+        >
           {progress > 0 ? "Continue Learning" : "Start Course"}
         </Button>
       </CardFooter>

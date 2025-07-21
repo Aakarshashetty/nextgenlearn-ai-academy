@@ -9,6 +9,7 @@ import { Video, Users, Calendar, Clock, Play } from "lucide-react";
 const Sessions = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [playingIndex, setPlayingIndex] = useState<number | null>(null); // Track which session is playing
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const toggleTheme = () => {
@@ -42,7 +43,7 @@ const Sessions = () => {
       <div className="flex w-full">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
         
-        <div className="flex-1 lg:ml-64">
+        <div className="flex-1 ">
           <Header 
             onMenuClick={toggleSidebar}
             isDarkMode={isDarkMode}
@@ -63,21 +64,38 @@ const Sessions = () => {
               {liveSessions.map((session, index) => (
                 <Card key={index} className="group hover:shadow-lg transition-all duration-300">
                   <div className="relative overflow-hidden rounded-t-lg">
-                    <img 
-                      src={session.thumbnail} 
-                      alt={session.title}
-                      className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    {session.isLive && (
-                      <Badge className="absolute top-3 left-3 bg-destructive text-white animate-pulse">
-                        🔴 LIVE
-                      </Badge>
-                    )}
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                      <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                        <Play className="h-6 w-6 text-white fill-white" />
+                    {playingIndex === index ? (
+                      <div className="w-full h-40 flex items-center justify-center bg-black">
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+                          title="YouTube video player"
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                          className="w-full h-40"
+                        ></iframe>
                       </div>
-                    </div>
+                    ) : (
+                      <>
+                        <img 
+                          src={session.thumbnail} 
+                          alt={session.title}
+                          className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        {session.isLive && (
+                          <Badge className="absolute top-3 left-3 bg-destructive text-white animate-pulse">
+                            🔴 LIVE
+                          </Badge>
+                        )}
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                          <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <Play className="h-6 w-6 text-white fill-white" />
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                   
                   <CardContent className="p-4 space-y-3">
@@ -106,9 +124,13 @@ const Sessions = () => {
                     <Button 
                       className="w-full" 
                       variant={session.isLive ? "destructive" : "outline"}
+                      onClick={() => {
+                        if (session.isLive) setPlayingIndex(index);
+                      }}
+                      disabled={playingIndex === index}
                     >
                       <Video className="h-4 w-4 mr-2" />
-                      {session.isLive ? "Join Live Session" : "Set Reminder"}
+                      {session.isLive ? (playingIndex === index ? "Playing..." : "Join Live Session") : "Set Reminder"}
                     </Button>
                   </CardContent>
                 </Card>

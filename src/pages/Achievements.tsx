@@ -118,7 +118,7 @@ const Achievements = () => {
       <div className="flex w-full">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
         
-        <div className="flex-1 lg:ml-64">
+        <div className="flex-1 ">
           <Header 
             onMenuClick={toggleSidebar}
             isDarkMode={isDarkMode}

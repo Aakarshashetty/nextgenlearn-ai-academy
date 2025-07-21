@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Header } from "@/components/layout/Header";
+import {Header} from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,16 +37,12 @@ const Settings = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="flex w-full">
+    <div className="h-screen w-screen overflow-hidden bg-background">
+      <div className="flex h-full w-full">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-        
-        <div className="flex-1 lg:ml-64">
+        <div className="flex-1 h-full overflow-y-auto">
           <Header 
-            onMenuClick={toggleSidebar}
-            isDarkMode={isDarkMode}
-            onThemeToggle={toggleTheme}
-          />
+            />
           
           <main className="container mx-auto px-4 py-6 space-y-8 max-w-4xl">
             <div className="space-y-2">

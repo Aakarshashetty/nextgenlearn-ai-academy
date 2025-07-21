@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Header } from "@/components/layout/Header";
+import {Header}  from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -80,12 +80,9 @@ const Groups = () => {
       <div className="flex w-full">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
         
-        <div className="flex-1 lg:ml-64">
+        <div className="flex-1 ">
           <Header 
-            onMenuClick={toggleSidebar}
-            isDarkMode={isDarkMode}
-            onThemeToggle={toggleTheme}
-          />
+            />
           
           <main className="container mx-auto px-4 py-6 space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

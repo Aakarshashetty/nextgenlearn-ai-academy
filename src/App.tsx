@@ -17,6 +17,7 @@ import Progress from "./pages/Progress";
 import Performance from "./pages/Performance";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import CourseDetail from "./pages/CourseDetail";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/courses" element={<Courses />} />
+          <Route path="/courses/:title" element={<CourseDetail />} />
           <Route path="/sessions" element={<Sessions />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/ai-tutor" element={<AITutor />} />

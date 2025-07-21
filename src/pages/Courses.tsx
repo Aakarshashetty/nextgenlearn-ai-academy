@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { courseCatalog } from '../data/courses';
 
 const Courses = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -35,74 +36,7 @@ const Courses = () => {
     document.documentElement.classList.toggle('dark');
   };
 
-  const courses = [
-    {
-      title: "Complete Web Development Bootcamp",
-      instructor: "Dr. Angela Yu",
-      duration: "65h 30m",
-      students: 15420,
-      rating: 4.9,
-      progress: 75,
-      thumbnail: "",
-      level: "Beginner" as const,
-      category: "Web Development"
-    },
-    {
-      title: "Advanced React and Redux",
-      instructor: "Stephen Grider",
-      duration: "47h 15m",
-      students: 8932,
-      rating: 4.8,
-      progress: 45,
-      thumbnail: "",
-      level: "Advanced" as const,
-      category: "Frontend"
-    },
-    {
-      title: "Python for Data Science",
-      instructor: "Jose Portilla",
-      duration: "42h 20m",
-      students: 12567,
-      rating: 4.7,
-      progress: 0,
-      thumbnail: "",
-      level: "Intermediate" as const,
-      category: "Data Science"
-    },
-    {
-      title: "Machine Learning A-Z",
-      instructor: "Kirill Eremenko",
-      duration: "44h 0m",
-      students: 25671,
-      rating: 4.9,
-      progress: 20,
-      thumbnail: "",
-      level: "Intermediate" as const,
-      category: "AI & ML"
-    },
-    {
-      title: "AWS Certified Solutions Architect",
-      instructor: "Ryan Kroonenburg",
-      duration: "28h 45m",
-      students: 7843,
-      rating: 4.6,
-      progress: 60,
-      thumbnail: "",
-      level: "Advanced" as const,
-      category: "Cloud Computing"
-    },
-    {
-      title: "Complete Digital Marketing Course",
-      instructor: "Rob Percival",
-      duration: "23h 30m",
-      students: 9876,
-      rating: 4.5,
-      progress: 0,
-      thumbnail: "",
-      level: "Beginner" as const,
-      category: "Marketing"
-    }
-  ];
+  const courses = courseCatalog;
 
   const categories = ["All", "Web Development", "Data Science", "AI & ML", "Cloud Computing", "Marketing", "Design"];
   const sortOptions = [
@@ -113,11 +47,10 @@ const Courses = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="flex w-full">
+    <div className="h-screen w-screen overflow-hidden bg-background">
+      <div className="flex h-full w-full">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-        
-        <div className="flex-1 lg:ml-64">
+        <div className="flex-1 h-full overflow-y-auto">
           <Header 
             onMenuClick={toggleSidebar}
             isDarkMode={isDarkMode}

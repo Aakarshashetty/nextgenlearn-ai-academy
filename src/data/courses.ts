@@ -1,0 +1,80 @@
+export const courseCatalog = [
+  {
+    title: "Complete Web Development Bootcamp",
+    instructor: "Dr. Angela Yu",
+    duration: "65h 30m",
+    students: 15420,
+    rating: 4.9,
+    progress: 75,
+    thumbnail: "",
+    level: "Beginner" as const,
+    category: "Web Development",
+    videoUrl: "https://www.youtube.com/embed/ZxKM3DCV2kE",
+    nextLesson: "HTML & CSS Basics"
+  },
+  {
+    title: "Advanced React and Redux",
+    instructor: "Stephen Grider",
+    duration: "47h 15m",
+    students: 8932,
+    rating: 4.8,
+    progress: 45,
+    thumbnail: "",
+    level: "Advanced" as const,
+    category: "Frontend",
+    videoUrl: "https://www.youtube.com/embed/9D1x7-2FmTA",
+    nextLesson: "Redux Middleware"
+  },
+  {
+    title: "Python for Data Science",
+    instructor: "Jose Portilla",
+    duration: "42h 20m",
+    students: 12567,
+    rating: 4.7,
+    progress: 0,
+    thumbnail: "",
+    level: "Intermediate" as const,
+    category: "Data Science",
+    videoUrl: "https://www.youtube.com/embed/rfscVS0vtbw",
+    nextLesson: "NumPy Basics"
+  },
+  {
+    title: "Machine Learning A-Z",
+    instructor: "Kirill Eremenko",
+    duration: "44h 0m",
+    students: 25671,
+    rating: 4.9,
+    progress: 20,
+    thumbnail: "",
+    level: "Intermediate" as const,
+    category: "AI & ML",
+    videoUrl: "https://www.youtube.com/embed/GwIo3gDZCVQ",
+    nextLesson: "Regression"
+  },
+  {
+    title: "AWS Certified Solutions Architect",
+    instructor: "Ryan Kroonenburg",
+    duration: "28h 45m",
+    students: 7843,
+    rating: 4.6,
+    progress: 60,
+    thumbnail: "",
+    level: "Advanced" as const,
+    category: "Cloud Computing",
+    videoUrl: "https://www.youtube.com/embed/ulprqHHWlng",
+    nextLesson: "VPC Design"
+  },
+  {
+    title: "Complete Digital Marketing Course",
+    instructor: "Rob Percival",
+    duration: "23h 30m",
+    students: 9876,
+    rating: 4.5,
+    progress: 0,
+    thumbnail: "",
+    level: "Beginner" as const,
+    category: "Marketing",
+    videoUrl: "https://www.youtube.com/embed/7nS2lrbAD5w",
+    nextLesson: "SEO Basics"
+  }
+]; 

@@ -104,11 +104,10 @@ const AITutor = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="flex w-full">
+    <div className="h-screen w-screen overflow-hidden bg-background">
+      <div className="flex h-full w-full">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-        
-        <div className="flex-1 lg:ml-64">
+        <div className="flex-1 h-full overflow-y-auto">
           <Header 
             onMenuClick={toggleSidebar}
             isDarkMode={isDarkMode}

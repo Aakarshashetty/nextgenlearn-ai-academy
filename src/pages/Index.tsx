@@ -20,6 +20,10 @@ import {
   Plus,
   ArrowRight
 } from "lucide-react";
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { courseCatalog } from '../data/courses';
+import { Link } from 'react-router-dom';
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -62,78 +66,15 @@ const Index = () => {
     }
   ];
 
-  const enrolledCourses = [
-    {
-      title: "JavaScript Fundamentals",
-      instructor: "Alex Rodriguez",
-      duration: "6h 20m",
-      students: 2100,
-      rating: 4.9,
-      progress: 75,
-      thumbnail: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400&h=250&fit=crop",
-      level: "Beginner" as const,
-      category: "Programming",
-      nextLesson: "Functions and Scope"
-    },
-    {
-      title: "React Development Bootcamp",
-      instructor: "Sarah Chen",
-      duration: "12h 45m",
-      students: 1850,
-      rating: 4.8,
-      progress: 45,
-      thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&h=250&fit=crop",
-      level: "Intermediate" as const,
-      category: "Web Development",
-      nextLesson: "State Management with Hooks"
-    }
-  ];
-
-  const recommendedCourses = [
-    {
-      title: "Python for Data Science",
-      instructor: "Dr. Maria Garcia",
-      duration: "10h 15m",
-      students: 3200,
-      rating: 4.9,
-      progress: 0,
-      thumbnail: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400&h=250&fit=crop",
-      level: "Beginner" as const,
-      category: "Data Science",
-      isRecommended: true
-    },
-    {
-      title: "UI/UX Design Mastery",
-      instructor: "David Kim",
-      duration: "8h 30m",
-      students: 1650,
-      rating: 4.7,
-      progress: 0,
-      thumbnail: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=250&fit=crop",
-      level: "Intermediate" as const,
-      category: "Design",
-      isRecommended: true
-    },
-    {
-      title: "Digital Marketing Strategy",
-      instructor: "Lisa Thompson",
-      duration: "7h 45m",
-      students: 980,
-      rating: 4.6,
-      progress: 0,
-      thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop",
-      level: "Beginner" as const,
-      category: "Marketing",
-      isRecommended: true
-    }
-  ];
-
+  const enrolledCourses = useSelector((state: RootState) => state.userCourses.enrolled);
+  const enrolledTitles = new Set(enrolledCourses.map(c => c.title));
+  const recommendedCourses = courseCatalog.filter(c => !enrolledTitles.has(c.title));
+console.log(enrolledCourses);
   return (
-    <div className="min-h-screen bg-background">
-      <div className="flex w-full">
+    <div className="h-screen w-screen overflow-hidden bg-background">
+      <div className="flex h-full w-full">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-        
-        <div className="flex-1 lg:ml-64">
+        <div className="flex-1 h-full overflow-y-auto">
           <Header 
             onMenuClick={toggleSidebar}
             isDarkMode={isDarkMode}
@@ -193,7 +134,7 @@ const Index = () => {
                 <StatsCard
                   key={stat.title}
                   {...stat}
-                  className={`opacity-0 animate-fade-in`}
+                  // className={`opacity-0 animate-fade-in`}
                   style={{ animationDelay: `${index * 100}ms` }}
                 />
               ))}
@@ -220,14 +161,35 @@ const Index = () => {
                       Pick up where you left off
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {enrolledCourses.map((course, index) => (
-                        <CourseCard
-                          key={course.title}
-                          {...course}
-                          className={`opacity-0 animate-fade-in hover:shadow-lg transition-all duration-300`}
-                          style={{ animationDelay: `${(index + 1) * 200}ms` }}
-                        />
-                      ))}
+                      {enrolledCourses.length === 0 ? (
+                        <div className="col-span-full text-center text-muted-foreground py-8">
+                          You have no active courses.<br />
+                          <Link to="/courses">
+                            <Button variant="gradient" className="mt-4">Start a new course</Button>
+                          </Link>
+                        </div>
+                      ) : (
+                        enrolledCourses.map((course, index) => {
+                          const fullCourse = courseCatalog.find(c => c.title === course.title) || course;
+                          return (
+                            <CourseCard
+                              key={fullCourse.title}
+                              title={fullCourse.title}
+                              instructor={fullCourse.instructor || ''}
+                              duration={fullCourse.duration || ''}
+                              students={fullCourse.students || 0}
+                              rating={fullCourse.rating || 0}
+                              progress={fullCourse.progress || 0}
+                              thumbnail={fullCourse.thumbnail || ''}
+                              level={fullCourse.level || 'Beginner'}
+                              category={fullCourse.category || ''}
+                              nextLesson={fullCourse.nextLesson || ''}
+                              // className={`opacity-0 animate-fade-in hover:shadow-lg transition-all duration-300`}
+                              style={{ animationDelay: `${(index + 1) * 200}ms` }}
+                            />
+                          );
+                        })
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -249,14 +211,20 @@ const Index = () => {
                       Based on your learning patterns and goals
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                      {recommendedCourses.map((course, index) => (
-                        <CourseCard
-                          key={course.title}
-                          {...course}
-                          className={`opacity-0 animate-fade-in hover:shadow-lg transition-all duration-300`}
-                          style={{ animationDelay: `${(index + 3) * 200}ms` }}
-                        />
-                      ))}
+                      {recommendedCourses.length === 0 ? (
+                        <div className="col-span-full text-center text-muted-foreground py-8">
+                          No recommendations available. You're all caught up!
+                        </div>
+                      ) : (
+                        recommendedCourses.map((course, index) => (
+                          <CourseCard
+                            key={course.title}
+                            {...course}
+                            // className={`opacity-0 animate-fade-in hover:shadow-lg transition-all duration-300`}
+                            style={{ animationDelay: `${(index + 3) * 200}ms` }}
+                          />
+                        ))
+                      )}
                     </div>
                   </CardContent>
                 </Card>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Header } from "@/components/layout/Header";
+import {Header}  from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { CourseCard } from "@/components/dashboard/CourseCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,16 +7,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Filter, TrendingUp, Star, BookOpen } from "lucide-react";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../store';
 
 const Explore = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  //const theme = useSelector((state: RootState) => state.theme.mode);
+  const dispatch = useDispatch();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark');
-  };
 
   const trendingCourses = [
     {
@@ -64,15 +63,12 @@ const Explore = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="flex w-full">
+    <div className="h-screen w-screen overflow-hidden bg-background">
+      <div className="flex h-full w-full">
         <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-        
-        <div className="flex-1 lg:ml-64">
+        <div className="flex-1 h-full overflow-y-auto">
           <Header 
-            onMenuClick={toggleSidebar}
-            isDarkMode={isDarkMode}
-            onThemeToggle={toggleTheme}
+            
           />
           
           <main className="container mx-auto px-4 py-6 space-y-8">
