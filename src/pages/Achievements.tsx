@@ -415,7 +415,7 @@ const Achievements = () => {
                     <div className="space-y-3">
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600">Completion Rate</span>
-                        <span className="font-medium">{completionRate}%</span>
+                        <span className="font-medium">{Math.round(completionRate)}%</span>
                       </div>
                       <Progress value={completionRate} className="h-2" />
                     </div>
