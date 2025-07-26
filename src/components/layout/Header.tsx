@@ -78,7 +78,7 @@ export const Header = ({ onMenuClick }: HeaderProps) => {
   const handleSignOut = () => {
     resetUserState();
     setAuthenticated(false);
-    navigate('/');
+    navigate('/login');
   };
 
   // Notifications (dummy data)

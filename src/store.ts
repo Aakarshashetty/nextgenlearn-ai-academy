@@ -431,7 +431,7 @@ const userInitialState: UserState = {
       },
     },
   ],
-  isAuthenticated: true,
+  isAuthenticated: false,
   isLoading: false,
   error: null,
 };
