@@ -14,22 +14,14 @@ import { enrollCourse, toggleLessonCompletion, toggleResourceFavorite } from '..
 import { RootState } from '../store';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { Copy, Mail, Facebook, Twitter, MessageCircle } from 'lucide-react';
+import { courseCatalog } from '../data/courses';
 
-// Demo data for course info, lessons, resources, related courses
-const demoCourses = [
-  {
-    title: "Complete Web Development Bootcamp",
-    instructor: "Dr. Angela Yu",
+// Enhanced course data with lessons, resources, and related courses
+const enhancedCourseData = {
+  "Complete Web Development Bootcamp": {
     instructorAvatar: "https://randomuser.me/api/portraits/women/44.jpg",
     instructorBio: "Lead instructor at London App Brewery. Passionate about teaching web development to millions.",
-    duration: "65h 30m",
-    students: 15420,
-    rating: 4.9,
-    level: "Beginner",
-    category: "Web Development",
     cover: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600",
-    progress: 75,
-    videoUrl: "https://www.youtube.com/embed/ZxKM3DCV2kE",
     lessons: [
       { title: "Introduction & Setup", duration: "10:00", videoUrl: "https://www.youtube.com/embed/ZxKM3DCV2kE" },
       { title: "HTML & CSS Basics", duration: "25:00", videoUrl: "https://www.youtube.com/embed/UB1O30fR-EE" },
@@ -43,26 +35,218 @@ const demoCourses = [
       { name: "Project Files", url: "#", type: "zip" },
       { name: "Cheat Sheet", url: "#", type: "pdf" },
       { name: "External Docs", url: "https://developer.mozilla.org/", type: "link" }
+    ]
+  },
+  "Advanced React and Redux": {
+    instructorAvatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    instructorBio: "Senior React developer and instructor with 10+ years of experience in frontend development.",
+    cover: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600",
+    lessons: [
+      { title: "React Fundamentals Review", duration: "15:00", videoUrl: "https://www.youtube.com/embed/9D1x7-2FmTA" },
+      { title: "Advanced Hooks", duration: "30:00", videoUrl: "https://www.youtube.com/embed/TNhaISOUy6Q" },
+      { title: "Redux Core Concepts", duration: "45:00", videoUrl: "https://www.youtube.com/embed/93p3LxR9xfM" },
+      { title: "Redux Toolkit", duration: "40:00", videoUrl: "https://www.youtube.com/embed/0ZJgIjIuY7U" },
+      { title: "Redux Middleware", duration: "35:00", videoUrl: "https://www.youtube.com/embed/3sjMRS1gJys" },
+      { title: "Performance Optimization", duration: "25:00", videoUrl: "https://www.youtube.com/embed/7YhdqIR2Yzo" }
     ],
-    related: [
-      {
-        title: "Advanced React and Redux",
-        instructor: "Stephen Grider",
-        cover: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400",
-        students: 8932
-      },
-      {
-        title: "Python for Data Science",
-        instructor: "Jose Portilla",
-        cover: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400",
-        students: 12567
-      }
+    resources: [
+      { name: "React Cheat Sheet", url: "#", type: "pdf" },
+      { name: "Redux Examples", url: "#", type: "zip" },
+      { name: "Performance Guide", url: "#", type: "pdf" },
+      { name: "React Docs", url: "https://react.dev/", type: "link" }
+    ]
+  },
+  "Python for Data Science": {
+    instructorAvatar: "https://randomuser.me/api/portraits/men/45.jpg",
+    instructorBio: "Data scientist and Python instructor specializing in machine learning and data analysis.",
+    cover: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600",
+    lessons: [
+      { title: "Python Basics", duration: "20:00", videoUrl: "https://www.youtube.com/embed/rfscVS0vtbw" },
+      { title: "NumPy Fundamentals", duration: "35:00", videoUrl: "https://www.youtube.com/embed/GB9ByFAIAH4" },
+      { title: "Pandas Data Manipulation", duration: "40:00", videoUrl: "https://www.youtube.com/embed/daefaLgNkw0" },
+      { title: "Data Visualization", duration: "30:00", videoUrl: "https://www.youtube.com/embed/3Xc3CA655Y4" },
+      { title: "Statistical Analysis", duration: "45:00", videoUrl: "https://www.youtube.com/embed/rDe0CS_qvdE" },
+      { title: "Machine Learning Intro", duration: "25:00", videoUrl: "https://www.youtube.com/embed/KNAWp2S3w94" }
+    ],
+    resources: [
+      { name: "Python Cheat Sheet", url: "#", type: "pdf" },
+      { name: "Data Science Projects", url: "#", type: "zip" },
+      { name: "Jupyter Notebooks", url: "#", type: "zip" },
+      { name: "Pandas Docs", url: "https://pandas.pydata.org/", type: "link" }
+    ]
+  },
+  "Machine Learning A-Z": {
+    instructorAvatar: "https://randomuser.me/api/portraits/men/28.jpg",
+    instructorBio: "AI researcher and machine learning expert with publications in top-tier conferences.",
+    cover: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600",
+    lessons: [
+      { title: "ML Fundamentals", duration: "25:00", videoUrl: "https://www.youtube.com/embed/GwIo3gDZCVQ" },
+      { title: "Supervised Learning", duration: "40:00", videoUrl: "https://www.youtube.com/embed/4PXAztQtoTg" },
+      { title: "Unsupervised Learning", duration: "35:00", videoUrl: "https://www.youtube.com/embed/8dtdm9MsWno" },
+      { title: "Deep Learning Basics", duration: "45:00", videoUrl: "https://www.youtube.com/embed/VyWAvY2CF3c" },
+      { title: "Neural Networks", duration: "50:00", videoUrl: "https://www.youtube.com/embed/aircAruvnKk" },
+      { title: "Model Deployment", duration: "30:00", videoUrl: "https://www.youtube.com/embed/8Ppdh-9jJLo" }
+    ],
+    resources: [
+      { name: "ML Algorithms Guide", url: "#", type: "pdf" },
+      { name: "Dataset Collection", url: "#", type: "zip" },
+      { name: "Model Templates", url: "#", type: "zip" },
+      { name: "Scikit-learn Docs", url: "https://scikit-learn.org/", type: "link" }
+    ]
+  },
+  "AWS Certified Solutions Architect": {
+    instructorAvatar: "https://randomuser.me/api/portraits/men/52.jpg",
+    instructorBio: "AWS certified solutions architect with 15+ years of cloud infrastructure experience.",
+    cover: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600",
+    lessons: [
+      { title: "AWS Fundamentals", duration: "20:00", videoUrl: "https://www.youtube.com/embed/ulprqHHWlng" },
+      { title: "EC2 & VPC Design", duration: "35:00", videoUrl: "https://www.youtube.com/embed/ITcX6aIJ0Ls" },
+      { title: "S3 & Storage Services", duration: "30:00", videoUrl: "https://www.youtube.com/embed/77lMCiiMilo" },
+      { title: "Database Services", duration: "40:00", videoUrl: "https://www.youtube.com/embed/7CZF6I8dnyY" },
+      { title: "Security & IAM", duration: "45:00", videoUrl: "https://www.youtube.com/embed/9OrmRe_glbI" },
+      { title: "Architecture Best Practices", duration: "25:00", videoUrl: "https://www.youtube.com/embed/0Kjzc8Tyq8M" }
+    ],
+    resources: [
+      { name: "AWS Architecture Guide", url: "#", type: "pdf" },
+      { name: "Practice Tests", url: "#", type: "zip" },
+      { name: "CloudFormation Templates", url: "#", type: "zip" },
+      { name: "AWS Documentation", url: "https://aws.amazon.com/documentation/", type: "link" }
+    ]
+  },
+  "Complete Digital Marketing Course": {
+    instructorAvatar: "https://randomuser.me/api/portraits/men/38.jpg",
+    instructorBio: "Digital marketing strategist helping businesses grow through effective online marketing.",
+    cover: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600",
+    lessons: [
+      { title: "Marketing Fundamentals", duration: "15:00", videoUrl: "https://www.youtube.com/embed/7nS2lrbAD5w" },
+      { title: "SEO Basics", duration: "30:00", videoUrl: "https://www.youtube.com/embed/2crRfGojUfE" },
+      { title: "Social Media Marketing", duration: "35:00", videoUrl: "https://www.youtube.com/embed/9P8mASSREYM" },
+      { title: "Content Marketing", duration: "25:00", videoUrl: "https://www.youtube.com/embed/2IuHkkSdA8Y" },
+      { title: "Email Marketing", duration: "20:00", videoUrl: "https://www.youtube.com/embed/9P8mASSREYM" },
+      { title: "Analytics & ROI", duration: "30:00", videoUrl: "https://www.youtube.com/embed/2IuHkkSdA8Y" }
+    ],
+    resources: [
+      { name: "Marketing Strategy Template", url: "#", type: "pdf" },
+      { name: "SEO Tools", url: "#", type: "zip" },
+      { name: "Content Calendar", url: "#", type: "pdf" },
+      { name: "Google Analytics", url: "https://analytics.google.com/", type: "link" }
+    ]
+  },
+  "UI/UX Design Fundamentals": {
+    instructorAvatar: "https://randomuser.me/api/portraits/women/28.jpg",
+    instructorBio: "Senior UX designer with expertise in user research, wireframing, and design systems.",
+    cover: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600",
+    lessons: [
+      { title: "Design Principles", duration: "20:00", videoUrl: "https://www.youtube.com/embed/3Y1H1iG3bTg" },
+      { title: "User Research", duration: "30:00", videoUrl: "https://www.youtube.com/embed/7VZLIPrjoUk" },
+      { title: "Wireframing", duration: "25:00", videoUrl: "https://www.youtube.com/embed/9P8mASSREYM" },
+      { title: "Prototyping", duration: "35:00", videoUrl: "https://www.youtube.com/embed/2IuHkkSdA8Y" },
+      { title: "User Testing", duration: "20:00", videoUrl: "https://www.youtube.com/embed/9P8mASSREYM" },
+      { title: "Design Systems", duration: "30:00", videoUrl: "https://www.youtube.com/embed/2IuHkkSdA8Y" }
+    ],
+    resources: [
+      { name: "Design System Guide", url: "#", type: "pdf" },
+      { name: "UI Kits", url: "#", type: "zip" },
+      { name: "Research Templates", url: "#", type: "pdf" },
+      { name: "Figma Community", url: "https://www.figma.com/community", type: "link" }
+    ]
+  },
+  "Cybersecurity Essentials": {
+    instructorAvatar: "https://randomuser.me/api/portraits/men/65.jpg",
+    instructorBio: "Former hacker turned cybersecurity expert, specializing in ethical hacking and security.",
+    cover: "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?w=600",
+    lessons: [
+      { title: "Network Security", duration: "25:00", videoUrl: "https://www.youtube.com/embed/2e--5cGJq98" },
+      { title: "Cryptography Basics", duration: "30:00", videoUrl: "https://www.youtube.com/embed/7nS2lrbAD5w" },
+      { title: "Ethical Hacking", duration: "40:00", videoUrl: "https://www.youtube.com/embed/2crRfGojUfE" },
+      { title: "Penetration Testing", duration: "35:00", videoUrl: "https://www.youtube.com/embed/9P8mASSREYM" },
+      { title: "Incident Response", duration: "25:00", videoUrl: "https://www.youtube.com/embed/2IuHkkSdA8Y" },
+      { title: "Security Compliance", duration: "20:00", videoUrl: "https://www.youtube.com/embed/9P8mASSREYM" }
+    ],
+    resources: [
+      { name: "Security Tools", url: "#", type: "zip" },
+      { name: "Penetration Testing Guide", url: "#", type: "pdf" },
+      { name: "Security Checklist", url: "#", type: "pdf" },
+      { name: "OWASP", url: "https://owasp.org/", type: "link" }
+    ]
+  },
+  "Mobile App Development with Flutter": {
+    instructorAvatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    instructorBio: "Mobile app developer and Flutter expert with 50+ published apps on app stores.",
+    cover: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=600",
+    lessons: [
+      { title: "Flutter Basics", duration: "20:00", videoUrl: "https://www.youtube.com/embed/fq4N0hgOWzU" },
+      { title: "Widgets & Layout", duration: "30:00", videoUrl: "https://www.youtube.com/embed/7nS2lrbAD5w" },
+      { title: "State Management", duration: "35:00", videoUrl: "https://www.youtube.com/embed/2crRfGojUfE" },
+      { title: "Navigation", duration: "25:00", videoUrl: "https://www.youtube.com/embed/9P8mASSREYM" },
+      { title: "API Integration", duration: "40:00", videoUrl: "https://www.youtube.com/embed/2IuHkkSdA8Y" },
+      { title: "App Deployment", duration: "20:00", videoUrl: "https://www.youtube.com/embed/9P8mASSREYM" }
+    ],
+    resources: [
+      { name: "Flutter Widget Catalog", url: "#", type: "pdf" },
+      { name: "Sample Apps", url: "#", type: "zip" },
+      { name: "Deployment Guide", url: "#", type: "pdf" },
+      { name: "Flutter Docs", url: "https://docs.flutter.dev/", type: "link" }
+    ]
+  },
+  "DevOps Masterclass": {
+    instructorAvatar: "https://randomuser.me/api/portraits/men/72.jpg",
+    instructorBio: "DevOps engineer and cloud architect with expertise in CI/CD and infrastructure automation.",
+    cover: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600",
+    lessons: [
+      { title: "CI/CD Pipelines", duration: "30:00", videoUrl: "https://www.youtube.com/embed/9A6Xf4oP7s8" },
+      { title: "Docker Containers", duration: "35:00", videoUrl: "https://www.youtube.com/embed/7nS2lrbAD5w" },
+      { title: "Kubernetes Orchestration", duration: "40:00", videoUrl: "https://www.youtube.com/embed/2crRfGojUfE" },
+      { title: "Infrastructure as Code", duration: "45:00", videoUrl: "https://www.youtube.com/embed/9P8mASSREYM" },
+      { title: "Monitoring & Logging", duration: "25:00", videoUrl: "https://www.youtube.com/embed/2IuHkkSdA8Y" },
+      { title: "Security in DevOps", duration: "30:00", videoUrl: "https://www.youtube.com/embed/9P8mASSREYM" }
+    ],
+    resources: [
+      { name: "Docker Cheat Sheet", url: "#", type: "pdf" },
+      { name: "Kubernetes Manifests", url: "#", type: "zip" },
+      { name: "CI/CD Templates", url: "#", type: "zip" },
+      { name: "Docker Hub", url: "https://hub.docker.com/", type: "link" }
     ]
   }
-];
+};
 
-function getCourseData(title) {
-  return demoCourses.find(c => c.title === title) || demoCourses[0];
+function getCourseData(title: string) {
+  const baseCourse = courseCatalog.find(c => c.title === title);
+  if (!baseCourse) return null;
+  
+  const enhancedData = enhancedCourseData[title] || {
+    instructorAvatar: "https://randomuser.me/api/portraits/men/1.jpg",
+    instructorBio: "Experienced instructor passionate about teaching and helping students succeed.",
+    cover: baseCourse.thumbnail,
+    lessons: [
+      { title: "Introduction", duration: "10:00", videoUrl: baseCourse.videoUrl },
+      { title: "Getting Started", duration: "15:00", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+      { title: "Core Concepts", duration: "20:00", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+      { title: "Advanced Topics", duration: "25:00", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+      { title: "Practical Examples", duration: "30:00", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+      { title: "Final Project", duration: "35:00", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
+    ],
+    resources: [
+      { name: "Course Materials", url: "#", type: "pdf" },
+      { name: "Project Files", url: "#", type: "zip" },
+      { name: "Reference Guide", url: "#", type: "pdf" },
+      { name: "External Resources", url: "https://example.com", type: "link" }
+    ]
+  };
+
+  return {
+    ...baseCourse,
+    ...enhancedData,
+    related: courseCatalog
+      .filter(c => c.title !== title)
+      .slice(0, 2)
+      .map(c => ({
+        title: c.title,
+        instructor: c.instructor,
+        cover: c.thumbnail,
+        students: c.students
+      }))
+  };
 }
 
 const CourseDetail = () => {
@@ -178,12 +362,9 @@ const CourseDetail = () => {
 
   const handleEnroll = () => {
     if (!isEnrolled) {
-      dispatch(enrollCourse({
-        ...course,
-        thumbnail: course.cover || "",
-        nextLesson: course.lessons[0].videoUrl || "",
-        level: course.level as 'Beginner' | 'Intermediate' | 'Advanced',
-      }));
+      // Set enrolled to true for this course
+      const enrolledCourse = { ...course, enrolled: true };
+      dispatch(enrollCourse(enrolledCourse));
       toast('Enrolled!');
     }
   };
@@ -211,168 +392,229 @@ const CourseDetail = () => {
             }}
           />
           <TooltipProvider>
-          <main className="container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Sidebar: Syllabus & Resources */}
-            <aside className="lg:col-span-4 xl:col-span-3 space-y-8 order-2 lg:order-1">
-              {/* Syllabus Section */}
-              <Card>
-                <CardHeader>
+                    <main className="container mx-auto px-6 py-8">
+            {/* Course Header Section */}
+            <div className="mb-12">
+              <div className="flex flex-col lg:flex-row gap-8 items-start">
+                <div className="lg:w-1/3">
+                  <img src={course.cover} alt="Course cover" className="w-full rounded-xl shadow-lg object-cover aspect-video" />
+                </div>
+                <div className="lg:w-2/3 space-y-6">
+                  <div className="space-y-4">
+                    <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent leading-tight">{course.title}</h1>
+                    <div className="flex flex-wrap gap-4 items-center text-muted-foreground">
+                      <Badge variant="secondary" className="text-sm px-3 py-1">{course.level}</Badge>
+                      <Badge variant="secondary" className="text-sm px-3 py-1">{course.category}</Badge>
+                      <span className="flex items-center gap-2 text-sm"><Clock className="h-4 w-4" />{course.duration}</span>
+                      <span className="flex items-center gap-2 text-sm"><Users className="h-4 w-4" />{course.students.toLocaleString()} students</span>
+                      <span className="flex items-center gap-2 text-sm"><Star className="h-4 w-4 fill-warning text-warning" />{course.rating}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4">
+                      <img src={course.instructorAvatar} alt={course.instructor} className="h-16 w-16 rounded-full border-2 border-primary/20" />
+                      <div>
+                        <div className="font-semibold text-lg">{course.instructor}</div>
+                        <div className="text-sm text-muted-foreground max-w-md">{course.instructorBio}</div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Course Progress</span>
+                        <span className="font-semibold text-primary">{course.progress}%</span>
+                      </div>
+                      <Progress value={course.progress} className="h-3" />
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-4">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant={isEnrolled ? 'success' : 'gradient'}
+                          size="lg"
+                          className={`px-8 py-3 text-lg ${isEnrolled ? 'bg-green-500 text-white hover:bg-green-600' : ''}`}
+                          onClick={handleEnroll}
+                          disabled={isEnrolled}
+                        >
+                          {isEnrolled ? '✓ Enrolled' : 'Enroll Now'}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>{isEnrolled ? 'You are already enrolled in this course' : 'Enroll in this course'}</TooltipContent>
+                    </Tooltip>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <CardTitle className="text-lg font-semibold flex items-center gap-2 cursor-help"><BookOpen className="h-5 w-5 text-primary" /> Syllabus <span className='ml-2 text-xs text-muted-foreground'>({course.lessons.length})</span></CardTitle>
+                        <Button variant="outline" size="lg" onClick={handleShare} className="px-8 py-3 text-lg">
+                          Share Course
+                        </Button>
                     </TooltipTrigger>
-                    <TooltipContent>All lessons in this course. Click a lesson to play.</TooltipContent>
+                      <TooltipContent>Copy share link</TooltipContent>
                   </Tooltip>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+              {/* Left Sidebar: Syllabus & Resources */}
+              <aside className="xl:col-span-1 space-y-8">
+                {/* Syllabus Section */}
+                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-gray-50/50">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-xl font-bold flex items-center gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <BookOpen className="h-5 w-5 text-primary" />
+                      </div>
+                      Syllabus
+                      <Badge variant="secondary" className="ml-auto">{course.lessons.length} lessons</Badge>
+                    </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col gap-3">
+                  <CardContent className="space-y-3">
                     {course.lessons?.map((l, idx) => (
                       <Tooltip key={idx}>
                         <TooltipTrigger asChild>
                           <div
-                            className={`flex items-center gap-3 rounded-2xl px-4 py-3 transition-colors cursor-pointer shadow-sm border bg-white/90 ${idx === currentLesson ? 'border-primary bg-primary/5' : 'border-transparent hover:bg-muted'} `}
+                            className={`group relative p-4 rounded-xl transition-all duration-200 cursor-pointer ${
+                              idx === currentLesson 
+                                ? 'bg-primary/10 border-2 border-primary/30 shadow-md' 
+                                : 'bg-white/80 border border-gray-100 hover:bg-gray-50 hover:shadow-md'
+                            }`}
                             onClick={() => setCurrentLesson(idx)}
-                            tabIndex={0}
-                            aria-label={`Lesson: ${l.title}`}
                           >
+                            <div className="flex items-start gap-3">
+                              <div className={`flex items-center justify-center h-10 w-10 rounded-lg transition-colors ${
+                                idx === currentLesson ? 'bg-primary/10 border-2 border-primary' : 'bg-gray-100 group-hover:bg-primary/10'
+                              }`}>
+                                {lessonCompletion[idx] ? (
+                                  <CheckCircle className="h-5 w-5 text-green-500" />
+                                ) : (
+                                  <Play className={`h-5 w-5 ${idx === currentLesson ? 'text-primary' : 'text-primary'}`} />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className={`font-semibold text-sm leading-tight ${
+                                  idx === currentLesson ? 'text-primary' : 'text-gray-900'
+                                }`}>
+                                  {idx + 1}. {l.title}
+                                </div>
+                                <div className="text-xs text-muted-foreground mt-1">{l.duration}</div>
+                              </div>
                             <input
                               type="checkbox"
                               checked={!!lessonCompletion[idx]}
-                              onChange={e => { e.stopPropagation(); dispatch(toggleLessonCompletion({ courseTitle: course.title, lessonIndex: idx })); }}
-                              className="accent-primary h-5 w-5 rounded mr-2"
-                              aria-label={lessonCompletion[idx] ? 'Mark as incomplete' : 'Mark as complete'}
-                              onClick={e => e.stopPropagation()}
-                            />
-                            <div className={`flex items-center justify-center h-10 w-10 rounded-xl ${idx === currentLesson ? 'bg-primary/10' : 'bg-muted'}`}>
-                              {lessonCompletion[idx] ? <CheckCircle className="h-5 w-5 text-green-500" /> : <Play className="h-5 w-5 text-primary" />}
+                                onChange={e => { 
+                                  e.stopPropagation(); 
+                                  dispatch(toggleLessonCompletion({ courseTitle: course.title, lessonIndex: idx })); 
+                                }}
+                                className="accent-primary h-4 w-4 mt-1"
+                              />
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <div className={`font-semibold text-base truncate ${idx === currentLesson ? 'text-primary' : ''}`}>{idx + 1}. {l.title}</div>
-                              <div className="text-xs text-muted-foreground">{l.duration}</div>
-                            </div>
-                            {/* Per-lesson notes icon */}
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button
-                                  className="ml-2 text-muted-foreground hover:text-primary"
-                                  onClick={e => { e.stopPropagation(); setLessonNotes(notes => ({ ...notes, [idx]: notes[idx] !== undefined ? notes[idx] : '' })); setCurrentLesson(idx); }}
-                                  aria-label="Add/View Notes"
-                                >
-                                  📝
-                                </button>
-                              </TooltipTrigger>
-                              <TooltipContent>Add/View Notes for this lesson</TooltipContent>
-                            </Tooltip>
+                            
+
                           </div>
                         </TooltipTrigger>
                         <TooltipContent>{l.title} • {l.duration}</TooltipContent>
-                        {/* Per-lesson notes input (show only for current lesson if toggled) */}
-                        {lessonNotes[idx] !== undefined && idx === currentLesson && (
-                          <div className="mt-2 flex flex-col gap-2 bg-muted rounded p-2">
-                            <textarea
-                              className="w-full border rounded p-2 text-sm"
-                              rows={2}
-                              placeholder="Add a note for this lesson..."
-                              value={lessonNotes[idx]}
-                              onChange={e => setLessonNotes(notes => ({ ...notes, [idx]: e.target.value }))}
-                            />
-                            <Button size="sm" onClick={() => setLessonNotes(notes => { const n = { ...notes }; delete n[idx]; return n; })}>Close</Button>
-                          </div>
-                        )}
+                        
+
                       </Tooltip>
                     ))}
-                  </div>
                 </CardContent>
               </Card>
+
               {/* Resources Section */}
-              <Card>
-                <CardHeader>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <CardTitle className="text-lg font-semibold flex items-center gap-2 cursor-help">📚 Resources <span className='ml-2 text-xs text-muted-foreground'>({filteredResources.length})</span></CardTitle>
-                    </TooltipTrigger>
-                    <TooltipContent>Downloadable files and helpful links for this course.</TooltipContent>
-                  </Tooltip>
+                <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-blue-50/30">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-xl font-bold flex items-center gap-3">
+                      <div className="p-2 bg-blue-500/10 rounded-lg">
+                        <span className="text-2xl">📚</span>
+                      </div>
+                      Resources
+                      <Badge variant="secondary" className="ml-auto">{filteredResources.length}</Badge>
+                    </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-2 mb-4">
+                  <CardContent className="space-y-4">
+                    {/* Search and Filter */}
+                    <div className="space-y-3">
                     <input
                       type="text"
                       placeholder="Search resources..."
                       value={resourceSearch}
                       onChange={e => setResourceSearch(e.target.value)}
-                      className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-                      aria-label="Search resources"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
                     />
                     <select
                       value={resourceTypeFilter}
                       onChange={e => setResourceTypeFilter(e.target.value)}
-                      className="border rounded px-2 py-1 text-sm"
-                      aria-label="Filter by type"
-                    >
-                      <option value="all">All</option>
-                      <option value="pdf">PDF</option>
-                      <option value="zip">ZIP</option>
-                      <option value="link">Link</option>
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      >
+                        <option value="all">All Types</option>
+                        <option value="pdf">PDF Files</option>
+                        <option value="zip">ZIP Archives</option>
+                        <option value="link">External Links</option>
                     </select>
                   </div>
+
+                    {/* Resources List */}
                   {filteredResources.length === 0 ? (
-                    <div className="text-muted-foreground text-sm text-center py-6">No resources found.</div>
+                      <div className="text-center py-8 text-muted-foreground">
+                        <div className="text-4xl mb-2">📭</div>
+                        <div className="text-sm">No resources found</div>
+                      </div>
                   ) : (
-                    <div className="flex flex-col gap-4">
+                      <div className="space-y-3">
                       {filteredResources.map((res, idx) => (
                         <Tooltip key={idx}>
                           <TooltipTrigger asChild>
-                            <div
-                              className="flex items-center gap-4 bg-[#f6fafd] rounded-2xl px-4 py-3 shadow-sm border border-transparent hover:border-primary transition group"
-                              tabIndex={0}
-                              aria-label={`Resource: ${res.name}`}
-                            >
-                              <button
-                                className={`mr-2 ${resourceFavorites.includes(res.name) ? 'text-yellow-400' : 'text-muted-foreground'} hover:text-yellow-500`}
-                                onClick={e => { e.stopPropagation(); dispatch(toggleResourceFavorite({ courseTitle: course.title, resourceName: res.name })); }}
-                                aria-label={resourceFavorites.includes(res.name) ? 'Unfavorite' : 'Favorite'}
-                              >
-                                <Star className="h-5 w-5" fill={resourceFavorites.includes(res.name) ? 'currentColor' : 'none'} />
-                              </button>
-                              <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-[#eaf1fb]">
+                              <div className="group p-4 bg-white/80 rounded-xl border border-gray-100 hover:border-primary/30 hover:shadow-md transition-all duration-200">
+                                <div className="flex items-center gap-3">
+                                  <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100">
                                 {res.type === 'pdf' && <FileText className="h-6 w-6 text-red-500" />}
                                 {res.type === 'zip' && <Download className="h-6 w-6 text-blue-500" />}
                                 {res.type === 'link' && <ExternalLink className="h-6 w-6 text-green-600" />}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <div className="font-semibold text-lg truncate group-hover:text-primary">{res.name}</div>
+                                    <div className="font-semibold text-sm truncate group-hover:text-primary transition-colors">
+                                      {res.name}
+                                    </div>
                                 <div className="text-xs text-muted-foreground capitalize mt-1">{res.type}</div>
                               </div>
-                              <div className="flex gap-2">
+                                  <div className="flex items-center gap-2">
+                                    <button
+                                      className={`p-1 rounded transition-colors ${
+                                        resourceFavorites.includes(res.name) 
+                                          ? 'text-yellow-500 hover:text-yellow-600' 
+                                          : 'text-gray-400 hover:text-yellow-500'
+                                      }`}
+                                      onClick={e => { 
+                                        e.stopPropagation(); 
+                                        dispatch(toggleResourceFavorite({ courseTitle: course.title, resourceName: res.name })); 
+                                      }}
+                                    >
+                                      <Star className="h-4 w-4" fill={resourceFavorites.includes(res.name) ? 'currentColor' : 'none'} />
+                                    </button>
                                 {res.type === 'link' ? (
                                   <a
                                     href={res.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center text-[#1877f2] hover:text-[#145dc2] focus:outline-none focus:ring-2 focus:ring-primary"
-                                    aria-label={`Open ${res.name}`}
+                                        className="p-1 text-blue-600 hover:text-blue-700 transition-colors"
                                   >
-                                    <ExternalLink className="h-5 w-5" />
+                                        <ExternalLink className="h-4 w-4" />
                                   </a>
                                 ) : (
                                   <a
                                     href={res.url}
                                     download
-                                    className="inline-flex items-center justify-center text-[#1877f2] hover:text-[#145dc2] focus:outline-none focus:ring-2 focus:ring-primary"
-                                    aria-label={`Download ${res.name}`}
+                                        className="p-1 text-blue-600 hover:text-blue-700 transition-colors"
                                   >
-                                    <Download className="h-5 w-5" />
+                                        <Download className="h-4 w-4" />
                                   </a>
                                 )}
-                              </div>
-                              {/* Resource preview for PDF/Link */}
-                              {res.type === 'pdf' && (
-                                <a href={res.url} target="_blank" rel="noopener noreferrer" className="ml-2 underline text-xs text-primary">Preview</a>
-                              )}
-                              {res.type === 'link' && (
-                                <a href={res.url} target="_blank" rel="noopener noreferrer" className="ml-2 underline text-xs text-primary">Visit</a>
-                              )}
+                                  </div>
+                                </div>
                             </div>
                           </TooltipTrigger>
                           <TooltipContent>{res.name} • {res.type.charAt(0).toUpperCase() + res.type.slice(1)}</TooltipContent>
@@ -384,54 +626,8 @@ const CourseDetail = () => {
               </Card>
             </aside>
 
-            {/* Main Content */}
-            <section className="lg:col-span-8 xl:col-span-9 space-y-8 order-1 lg:order-2">
-              {/* Course Cover & Info */}
-              <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
-                <img src={course.cover} alt="Course cover" className="w-full max-w-xs rounded-lg shadow-md object-cover" />
-                <div className="flex-1 space-y-3">
-                  <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">{course.title}</h1>
-                  <div className="flex flex-wrap gap-3 items-center text-muted-foreground text-sm">
-                    <Badge variant="secondary">{course.level}</Badge>
-                    <Badge variant="secondary">{course.category}</Badge>
-                    <span className="flex items-center gap-1"><Clock className="h-4 w-4" />{course.duration}</span>
-                    <span className="flex items-center gap-1"><Users className="h-4 w-4" />{course.students.toLocaleString()} students</span>
-                    <span className="flex items-center gap-1"><Star className="h-4 w-4 fill-warning text-warning" />{course.rating}</span>
-                  </div>
-                  <Progress value={course.progress} className="h-2" />
-                  <div className="flex items-center gap-3 mt-2">
-                    <img src={course.instructorAvatar} alt={course.instructor} className="h-10 w-10 rounded-full border" />
-                    <div>
-                      <div className="font-semibold text-base">{course.instructor}</div>
-                      <div className="text-xs text-muted-foreground">{course.instructorBio}</div>
-                    </div>
-                  </div>
-                  <div className="flex gap-2 mt-4">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant={isEnrolled ? 'success' : 'gradient'}
-                          style={{ cursor: 'pointer', backgroundColor: isEnrolled ? '#22c55e' : undefined, color: isEnrolled ? 'white' : undefined }}
-                          onClick={handleEnroll}
-                          className={`transition hover:brightness-95 ${isEnrolled ? 'bg-green-500 text-white hover:bg-green-600' : ''}`}
-                          disabled={isEnrolled}
-                        >
-                          {isEnrolled ? 'Enrolled' : 'Enroll Now'}
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>{isEnrolled ? 'You are already enrolled in this course' : 'Enroll in this course'}</TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="outline" style={{ cursor: 'pointer' }} onClick={handleShare} className="transition hover:bg-primary/10">
-                          Share Course
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Copy share link</TooltipContent>
-                    </Tooltip>
-                  </div>
-                </div>
-              </div>
+                            {/* Main Content Area */}
+              <section className="xl:col-span-3 space-y-8">
 
               {/* Video Player Section */}
               <Card>
@@ -543,6 +739,7 @@ const CourseDetail = () => {
                 </CardContent>
               </Card>
             </section>
+            </div>
           </main>
           </TooltipProvider>
         </div>

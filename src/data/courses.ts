@@ -6,11 +6,12 @@ export const courseCatalog = [
     students: 15420,
     rating: 4.9,
     progress: 75,
-    thumbnail: "",
+    thumbnail: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=225&fit=crop&crop=center",
     level: "Beginner" as const,
     category: "Web Development",
     videoUrl: "https://www.youtube.com/embed/ZxKM3DCV2kE",
-    nextLesson: "HTML & CSS Basics"
+    nextLesson: "HTML & CSS Basics",
+    enrolled: false
   },
   {
     title: "Advanced React and Redux",
@@ -19,11 +20,12 @@ export const courseCatalog = [
     students: 8932,
     rating: 4.8,
     progress: 45,
-    thumbnail: "",
+    thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&h=225&fit=crop&crop=center",
     level: "Advanced" as const,
     category: "Frontend",
     videoUrl: "https://www.youtube.com/embed/9D1x7-2FmTA",
-    nextLesson: "Redux Middleware"
+    nextLesson: "Redux Middleware",
+    enrolled: false
   },
   {
     title: "Python for Data Science",
@@ -32,11 +34,12 @@ export const courseCatalog = [
     students: 12567,
     rating: 4.7,
     progress: 0,
-    thumbnail: "",
+    thumbnail: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400&h=225&fit=crop&crop=center",
     level: "Intermediate" as const,
     category: "Data Science",
     videoUrl: "https://www.youtube.com/embed/rfscVS0vtbw",
-    nextLesson: "NumPy Basics"
+    nextLesson: "NumPy Basics",
+    enrolled: false
   },
   {
     title: "Machine Learning A-Z",
@@ -45,11 +48,12 @@ export const courseCatalog = [
     students: 25671,
     rating: 4.9,
     progress: 20,
-    thumbnail: "",
+    thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=225&fit=crop&crop=center",
     level: "Intermediate" as const,
     category: "AI & ML",
     videoUrl: "https://www.youtube.com/embed/GwIo3gDZCVQ",
-    nextLesson: "Regression"
+    nextLesson: "Regression",
+    enrolled: false
   },
   {
     title: "AWS Certified Solutions Architect",
@@ -58,11 +62,12 @@ export const courseCatalog = [
     students: 7843,
     rating: 4.6,
     progress: 60,
-    thumbnail: "",
+    thumbnail: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=225&fit=crop&crop=center",
     level: "Advanced" as const,
     category: "Cloud Computing",
     videoUrl: "https://www.youtube.com/embed/ulprqHHWlng",
-    nextLesson: "VPC Design"
+    nextLesson: "VPC Design",
+    enrolled: false
   },
   {
     title: "Complete Digital Marketing Course",
@@ -71,10 +76,67 @@ export const courseCatalog = [
     students: 9876,
     rating: 4.5,
     progress: 0,
-    thumbnail: "",
+    thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=225&fit=crop&crop=center",
     level: "Beginner" as const,
     category: "Marketing",
     videoUrl: "https://www.youtube.com/embed/7nS2lrbAD5w",
-    nextLesson: "SEO Basics"
+    nextLesson: "SEO Basics",
+    enrolled: false
+  },
+  {
+    title: "UI/UX Design Fundamentals",
+    instructor: "Jane Doe",
+    duration: "30h 10m",
+    students: 11234,
+    rating: 4.7,
+    progress: 0,
+    thumbnail: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&h=225&fit=crop&crop=center",
+    level: "Beginner" as const,
+    category: "Design",
+    videoUrl: "https://www.youtube.com/embed/3Y1H1iG3bTg",
+    nextLesson: "Design Principles",
+    enrolled: false
+  },
+  {
+    title: "Cybersecurity Essentials",
+    instructor: "Kevin Mitnick",
+    duration: "36h 50m",
+    students: 8450,
+    rating: 4.8,
+    progress: 0,
+    thumbnail: "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?w=400&h=225&fit=crop&crop=center",
+    level: "Intermediate" as const,
+    category: "Security",
+    videoUrl: "https://www.youtube.com/embed/2e--5cGJq98",
+    nextLesson: "Network Security",
+    enrolled: false
+  },
+  {
+    title: "Mobile App Development with Flutter",
+    instructor: "Angela Yu",
+    duration: "40h 00m",
+    students: 13200,
+    rating: 4.9,
+    progress: 0,
+    thumbnail: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=400&h=225&fit=crop&crop=center",
+    level: "Intermediate" as const,
+    category: "Mobile Development",
+    videoUrl: "https://www.youtube.com/embed/fq4N0hgOWzU",
+    nextLesson: "Flutter Basics",
+    enrolled: false
+  },
+  {
+    title: "DevOps Masterclass",
+    instructor: "Kelsey Hightower",
+    duration: "38h 20m",
+    students: 9900,
+    rating: 4.8,
+    progress: 0,
+    thumbnail: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=225&fit=crop&crop=center",
+    level: "Advanced" as const,
+    category: "DevOps",
+    videoUrl: "https://www.youtube.com/embed/9A6Xf4oP7s8",
+    nextLesson: "CI/CD Pipelines",
+    enrolled: false
   }
 ]; 

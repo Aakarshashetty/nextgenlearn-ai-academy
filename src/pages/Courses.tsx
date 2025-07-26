@@ -29,6 +29,7 @@ const Courses = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [searchTerm, setSearchTerm] = useState("");
+  const [coursesToShow, setCoursesToShow] = useState(3); // Show first 6 courses initially
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const toggleTheme = () => {
@@ -37,6 +38,12 @@ const Courses = () => {
   };
 
   const courses = courseCatalog;
+  const displayedCourses = courses.slice(0, coursesToShow);
+  const hasMoreCourses = coursesToShow < courses.length;
+
+  const handleLoadMore = () => {
+    setCoursesToShow(prev => Math.min(prev + 6, courses.length));
+  };
 
   const categories = ["All", "Web Development", "Data Science", "AI & ML", "Cloud Computing", "Marketing", "Design"];
   const sortOptions = [
@@ -70,7 +77,7 @@ const Courses = () => {
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary" className="gap-1">
                     <TrendingUp className="h-3 w-3" />
-                    6 Active
+                    {courses.length} Available
                   </Badge>
                   <Badge variant="outline" className="gap-1">
                     <Star className="h-3 w-3 fill-warning text-warning" />
@@ -146,7 +153,7 @@ const Courses = () => {
                 ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" 
                 : "grid-cols-1"
             }`}>
-              {courses.map((course, index) => (
+              {displayedCourses.map((course, index) => (
                 <CourseCard
                   key={course.title}
                   {...course}
@@ -157,11 +164,17 @@ const Courses = () => {
             </div>
 
             {/* Load More */}
-            <div className="flex justify-center pt-8">
-              <Button variant="outline" size="lg">
-                Load More Courses
-              </Button>
-            </div>
+            {hasMoreCourses && (
+              <div className="flex justify-center pt-8">
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={handleLoadMore}
+                >
+                  Load More Courses
+                </Button>
+              </div>
+            )}
           </main>
         </div>
       </div>

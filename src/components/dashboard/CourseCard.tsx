@@ -20,6 +20,7 @@ interface CourseCardProps {
   nextLesson?: string;
   isRecommended?: boolean;
   videoUrl?: string;
+  enrolled?: boolean;
 }
 
 export const CourseCard = ({ 
@@ -36,7 +37,8 @@ export const CourseCard = ({
   style,
   nextLesson,
   isRecommended,
-  videoUrl
+  videoUrl,
+  enrolled
 }: CourseCardProps) => {
   const getLevelColor = (level: string) => {
     switch (level) {
@@ -126,7 +128,7 @@ export const CourseCard = ({
           </div>
         </div>
         
-        {progress > 0 && (
+        {/* {progress > 0 && (
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Progress</span>
@@ -134,16 +136,16 @@ export const CourseCard = ({
             </div>
             <Progress value={progress} className="h-2" />
           </div>
-        )}
+        )} */}
       </CardContent>
       
       <CardFooter className="p-4 pt-0">
         <Button 
           className="w-full" 
-          variant={progress > 0 ? "default" : "gradient"}
+          variant={"gradient"}
           onClick={() => navigate(`/courses/${encodeURIComponent(title)}`, { state: { videoUrl } })}
         >
-          {progress > 0 ? "Continue Learning" : "Start Course"}
+          {enrolled ? "Continue Learning" : "Start Course"}
         </Button>
       </CardFooter>
     </Card>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { StatsCard } from "@/components/dashboard/StatsCard";
@@ -20,14 +20,35 @@ import {
   Plus,
   ArrowRight
 } from "lucide-react";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
+import { addScheduledSession } from '../store';
 import { courseCatalog } from '../data/courses';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [scheduleData, setScheduleData] = useState({
+    title: '',
+    date: '',
+    time: '',
+    duration: '60',
+    course: 'none',
+    notes: ''
+  });
+  
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const recommendedSectionRef = useRef<HTMLDivElement>(null);
+  const scheduledSessions = useSelector((state: RootState) => state.scheduledSessions.sessions);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const toggleTheme = () => {
@@ -35,12 +56,80 @@ const Index = () => {
     document.documentElement.classList.toggle('dark');
   };
 
+  // Handle Start New Course - scroll to recommended section
+  const handleStartNewCourse = () => {
+    recommendedSectionRef.current?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+  };
+
+  // Handle Ask AI Tutor - navigate to AI tutor page
+  const handleAskAITutor = () => {
+    navigate('/ai-tutor');
+  };
+
+  // Handle Schedule Study Time - open modal
+  const handleScheduleStudyTime = () => {
+    setIsScheduleModalOpen(true);
+  };
+
+  // Handle schedule form submission
+  const handleScheduleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate required fields
+    if (!scheduleData.title || !scheduleData.date || !scheduleData.time) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    // Add to Redux store
+    dispatch(addScheduledSession({
+      title: scheduleData.title,
+      date: scheduleData.date,
+      time: scheduleData.time,
+      duration: scheduleData.duration,
+      course: scheduleData.course === 'none' ? '' : scheduleData.course,
+      notes: scheduleData.notes,
+    }));
+
+    // Show success message
+    toast.success("Study session scheduled successfully!", {
+      description: `${scheduleData.title} on ${scheduleData.date} at ${scheduleData.time}`
+    });
+
+    // Reset form and close modal
+    setScheduleData({
+      title: '',
+      date: '',
+      time: '',
+      duration: '60',
+      course: 'none',
+      notes: ''
+    });
+    setIsScheduleModalOpen(false);
+  };
+
+  // Get current date for date input min value
+  const today = new Date().toISOString().split('T')[0];
+
+  const enrolledCourses = useSelector((state: RootState) => state.userCourses.enrolled);
+  const enrolledTitles = new Set(enrolledCourses.map(c => c.title));
+  const recommendedCourses = courseCatalog.filter(c => !enrolledTitles.has(c.title));
+
+  // Get upcoming sessions for display
+  const upcomingSessions = scheduledSessions
+    .filter(session => !session.completed)
+    .sort((a, b) => new Date(`${a.date} ${a.time}`).getTime() - new Date(`${b.date} ${b.time}`).getTime())
+    .slice(0, 3);
+
   const statsData = [
     {
       title: "Courses in Progress",
-      value: "3",
+      value: enrolledCourses.length.toString(),
       icon: BookOpen,
-      description: "2 new this week",
+      description: "Active courses",
       trend: { value: 15, isPositive: true }
     },
     {
@@ -51,11 +140,11 @@ const Index = () => {
       trend: { value: 8, isPositive: true }
     },
     {
-      title: "Total XP",
-      value: "2,450",
-      icon: Trophy,
-      description: "Level 8 learner",
-      trend: { value: 12, isPositive: true }
+      title: "Scheduled Sessions",
+      value: scheduledSessions.filter(s => !s.completed).length.toString(),
+      icon: Calendar,
+      description: "Upcoming",
+      trend: { value: scheduledSessions.length > 0 ? 10 : 0, isPositive: true }
     },
     {
       title: "Study Time",
@@ -66,10 +155,7 @@ const Index = () => {
     }
   ];
 
-  const enrolledCourses = useSelector((state: RootState) => state.userCourses.enrolled);
-  const enrolledTitles = new Set(enrolledCourses.map(c => c.title));
-  const recommendedCourses = courseCatalog.filter(c => !enrolledTitles.has(c.title));
-console.log(enrolledCourses);
+
   return (
     <div className="h-screen w-screen overflow-hidden bg-background">
       <div className="flex h-full w-full">
@@ -102,7 +188,7 @@ console.log(enrolledCourses);
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-success rounded-full"></div>
-                    <span>2 courses in progress</span>
+                    <span>{enrolledCourses.length} courses in progress</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4" />
@@ -114,15 +200,19 @@ console.log(enrolledCourses);
 
             {/* Quick Actions */}
             <div className="flex flex-wrap gap-3 animate-slide-up">
-              <Button variant="gradient" className="gap-2">
+              <Button variant="gradient" className="gap-2" onClick={handleStartNewCourse}>
                 <Plus className="h-4 w-4" />
                 Start New Course
               </Button>
-              <Button variant="outline" className="gap-2">
+              <Button 
+                variant="outline" 
+                className="gap-2" 
+                onClick={handleScheduleStudyTime}
+              >
                 <Calendar className="h-4 w-4" />
                 Schedule Study Time
               </Button>
-              <Button variant="outline" className="gap-2">
+              <Button variant="outline" className="gap-2" onClick={handleAskAITutor}>
                 <Brain className="h-4 w-4" />
                 Ask AI Tutor
               </Button>
@@ -150,9 +240,14 @@ console.log(enrolledCourses);
                     <CardTitle className="flex items-center gap-2">
                       <BookOpen className="h-5 w-5 text-primary" />
                       Continue Learning
-                      <Badge variant="outline" className="ml-2">2 Active</Badge>
+                      <Badge variant="outline" className="ml-2">{enrolledCourses.length} Active</Badge>
                     </CardTitle>
-                    <Button variant="ghost" size="sm" className="hover:bg-primary/10">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="hover:bg-primary/10"
+                      onClick={() => navigate('/courses')}
+                    >
                       View All <ArrowRight className="h-4 w-4 ml-1" />
                     </Button>
                   </CardHeader>
@@ -195,14 +290,19 @@ console.log(enrolledCourses);
                 </Card>
 
                 {/* Recommended Section */}
-                <Card className="animate-slide-up">
+                <Card className="animate-slide-up" ref={recommendedSectionRef}>
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle className="flex items-center gap-2">
                       <Zap className="h-5 w-5 text-accent" />
                       Recommended for You
                       <Badge variant="secondary" className="bg-accent/10 text-accent">AI Picked</Badge>
                     </CardTitle>
-                    <Button variant="ghost" size="sm" className="hover:bg-accent/10">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="hover:bg-accent/10"
+                      onClick={() => navigate('/courses')}
+                    >
                       View All <ArrowRight className="h-4 w-4 ml-1" />
                     </Button>
                   </CardHeader>
@@ -256,6 +356,59 @@ console.log(enrolledCourses);
                   </CardContent>
                 </Card>
 
+                {/* Upcoming Study Sessions */}
+                <Card className="animate-scale-in">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <Calendar className="h-5 w-5 text-primary" />
+                      Upcoming Sessions
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {upcomingSessions.length === 0 ? (
+                      <div className="text-center text-muted-foreground py-4">
+                        <Calendar className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                        <p className="text-sm">No upcoming sessions</p>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="mt-2"
+                          onClick={handleScheduleStudyTime}
+                        >
+                          Schedule One
+                        </Button>
+                      </div>
+                    ) : (
+                      upcomingSessions.map((session) => (
+                        <div key={session.id} className="flex items-center justify-between p-3 rounded-lg border">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate">{session.title}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {new Date(session.date).toLocaleDateString()} at {session.time}
+                            </p>
+                            {session.course && (
+                              <p className="text-xs text-muted-foreground">{session.course}</p>
+                            )}
+                          </div>
+                          <Badge variant="secondary" className="ml-2">
+                            {session.duration}m
+                          </Badge>
+                        </div>
+                      ))
+                    )}
+                    {upcomingSessions.length > 0 && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="w-full"
+                        onClick={handleScheduleStudyTime}
+                      >
+                        Schedule More
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+
                 {/* Community Highlights */}
                 <Card className="animate-scale-in">
                   <CardHeader>
@@ -273,7 +426,12 @@ console.log(enrolledCourses);
                       <span className="text-sm">New Discussions</span>
                       <Badge variant="secondary">12 today</Badge>
                     </div>
-                    <Button variant="outline" size="sm" className="w-full">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full"
+                      onClick={() => navigate('/discussion')}
+                    >
                       Join Discussion
                     </Button>
                   </CardContent>
@@ -283,6 +441,97 @@ console.log(enrolledCourses);
           </main>
         </div>
       </div>
+
+      {/* Schedule Study Time Modal */}
+      <Dialog open={isScheduleModalOpen} onOpenChange={setIsScheduleModalOpen}>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle>Schedule New Study Session</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleScheduleSubmit} className="space-y-4">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="title">Title</Label>
+                <Input
+                  id="title"
+                  value={scheduleData.title}
+                  onChange={(e) => setScheduleData({ ...scheduleData, title: e.target.value })}
+                  placeholder="e.g., React Hooks"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="date">Date</Label>
+                <Input
+                  type="date"
+                  id="date"
+                  value={scheduleData.date}
+                  onChange={(e) => setScheduleData({ ...scheduleData, date: e.target.value })}
+                  min={today}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="time">Time</Label>
+                <Input
+                  type="time"
+                  id="time"
+                  value={scheduleData.time}
+                  onChange={(e) => setScheduleData({ ...scheduleData, time: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="duration">Duration (minutes)</Label>
+                <Select
+                  onValueChange={(value) => setScheduleData({ ...scheduleData, duration: value })}
+                  defaultValue={scheduleData.duration}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a duration" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="30">30 minutes</SelectItem>
+                    <SelectItem value="60">60 minutes</SelectItem>
+                    <SelectItem value="90">90 minutes</SelectItem>
+                    <SelectItem value="120">120 minutes</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="course">Course (Optional)</Label>
+                <Select
+                  onValueChange={(value) => setScheduleData({ ...scheduleData, course: value })}
+                  defaultValue={scheduleData.course}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a course (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No specific course</SelectItem>
+                    {courseCatalog.map(course => (
+                      <SelectItem key={course.title} value={course.title}>
+                        {course.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="notes">Notes</Label>
+                <Textarea
+                  id="notes"
+                  value={scheduleData.notes}
+                  onChange={(e) => setScheduleData({ ...scheduleData, notes: e.target.value })}
+                  placeholder="Add any notes for the session"
+                />
+              </div>
+            </div>
+            <Button type="submit" className="w-full">Schedule Session</Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
